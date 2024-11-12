@@ -22,7 +22,7 @@ Project is created with:
 
 ## Libraries Used
 The Libraries Used in this application are:
-*CameraX
-*ML Kit
+* CameraX
+* ML Kit
 
 ## Screenshot
