@@ -1,4 +1,10 @@
-# Scanner-App
+## Table of contents
+* [General info](#general-info)
+* [Technologies](#technologies)
+* [Libraries Used](#libraries-used)
+* [Screenshot](#screenshot)
+
+## General info
 This is a QR Code Scanner App built with Kotlin and Jetpack Compose. It leverages CameraX for real-time camera preview and ML Kit's Barcode Scanning API for detecting and reading QR codes from the camera feed.
 
 App Functionality:-
@@ -8,3 +14,15 @@ App Functionality:-
    access or share the QR code content.
 5) Chrome Redirection: When a QR code contains a URL, the app launches Chrome (or the default browser if Chrome isn’t installed) to open
    the link directly.
+
+## Technologies
+Project is created with:
+* Kotlin
+* Jetpack Compose
+
+## Libraries Used
+The Libraries Used in this application are:
+*CameraX
+*ML Kit
+
+## Screenshot
