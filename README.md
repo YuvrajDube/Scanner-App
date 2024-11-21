@@ -26,6 +26,6 @@ The Libraries Used in this application are:
 * ML Kit
 
 ## Screenshot
-<img src= "https://github.com/YuvrajDube/Scanner-App/blob/main/Assets/Home%20Page.jpeg" width="240"> <img src= "https://github.com/YuvrajDube/Scanner-App/blob/main/Assets/Permission%20Page.jpeg" width="240"> <img src= "https://github.com/YuvrajDube/Scanner-App/blob/main/Assets/Scanning%20Page.jpeg" width="240">
+  <img src= "https://github.com/YuvrajDube/Scanner-App/blob/main/Assets/splashscreen.png" width="240"> <img src= "https://github.com/YuvrajDube/Scanner-App/blob/main/Assets/Home Page.jpeg" width="240"> <img src= "https://github.com/YuvrajDube/Scanner-App/blob/main/Assets/Permission%20Page.jpeg" width="240"> <img src= "https://github.com/YuvrajDube/Scanner-App/blob/main/Assets/Scanner Page.jpeg" width="240">
 
 
