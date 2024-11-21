@@ -2,6 +2,7 @@ package com.example.qrcodescanner
 
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -9,6 +10,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.setContent
@@ -19,15 +22,29 @@ import androidx.annotation.OptIn
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.barcode.BarcodeScanner
@@ -47,7 +64,14 @@ class MainActivity : ComponentActivity() {
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         setContent {
-                    QRCodeScanner(
+            var showSplashScreen by remember { mutableStateOf(true) }
+
+            if (showSplashScreen) {
+                SplashScreen {
+                    showSplashScreen = false
+                }
+            } else
+            QRCodeScanner(
                         onBarcodeScanned = { barcode ->
                             val data = barcode.rawValue
                             if (data != null) {
@@ -91,6 +115,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun QRCodeScanner(onBarcodeScanned: (Barcode) -> Unit) {
     val context = LocalContext.current
@@ -105,16 +130,35 @@ fun QRCodeScanner(onBarcodeScanned: (Barcode) -> Unit) {
         onResult = { granted -> hasCameraPermission = granted }
     )
 
+    Scaffold(
+        topBar = { CustomTopAppBar() },
+        content = {  }
+    )
+
     if (hasCameraPermission) {
-        CameraPreview(onBarcodeScanned = onBarcodeScanned)
+        Column(modifier = Modifier.fillMaxSize(),
+          verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("HERE IS YOUR SCANNER:-")
+            Spacer(modifier = Modifier.height(40.dp))
+            CameraPreview(onBarcodeScanned = onBarcodeScanned)
+            Spacer(modifier = Modifier.height(30.dp))
+            Text("TOAST HERE:-")
+
+        }
     } else {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+
+
             Text("Camera permission is required to scan QR codes.")
             Spacer(modifier = Modifier.height(16.dp))
+
             Button(onClick = { cameraPermissionLauncher.launch(Manifest.permission.CAMERA) }) {
                 Text("Grant Camera Permission")
             }
@@ -130,6 +174,10 @@ fun CameraPreview(onBarcodeScanned: (Barcode) -> Unit) {
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
 
     AndroidView(
+
+        modifier = Modifier
+            .fillMaxSize(0.5f),
+
         factory = { AndroidViewContext ->
             PreviewView(AndroidViewContext).apply {
                 scaleType = PreviewView.ScaleType.FILL_CENTER
@@ -158,8 +206,10 @@ fun CameraPreview(onBarcodeScanned: (Barcode) -> Unit) {
                     }
                 }, ContextCompat.getMainExecutor(context))
             }
-        },
-        modifier = Modifier.fillMaxSize()
+        }
+
+
+
     )
 }
 
@@ -186,3 +236,71 @@ class BarcodeAnalyzer(private val onBarcodeScanned: (Barcode) -> Unit) : ImageAn
         }
     }
 }
+
+@Composable
+fun SplashScreen(onTimeout: () -> Unit) {
+    LaunchedEffect(Unit) {
+        Handler(Looper.getMainLooper()).postDelayed({
+            onTimeout()
+        }, 2000)
+    }
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.splashscreen),
+            contentDescription = "Splash Screen",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+    }
+}
+
+
+@kotlin.OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomTopAppBar() {
+    TopAppBar(
+        title = {
+            Text(
+                text = "SCAN",
+                fontSize = 25.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+                fontWeight = FontWeight.Bold
+            )
+        },
+        navigationIcon = {
+            IconButton(onClick = { /* Left icon action */ }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.vector),
+                    contentDescription = "3 lines",
+                    tint = White
+
+                )
+            }
+        },
+        actions = {
+            IconButton(onClick = { /* First action */ }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.dot),
+                    contentDescription = "3 dots"
+                )
+            }
+
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color(0xFF2E56D0),
+        )
+    )
+}
+
+
+
+
+
+
+
+
